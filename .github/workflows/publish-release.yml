@@ -1,0 +1,55 @@
+name: Publish Github release
+
+on:
+  push:
+    tags:
+      - 'v*-release'
+
+
+permissions:
+  contents: write
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build the mod
+        run: ./gradlew --no-daemon build
+        
+      - name: Read CHANGELOG.md
+        id: read_changelog
+        shell: bash
+        run: |
+          r=$(cat CHANGELOG.md)
+          r="${r//'%'/'%25'}"
+          r="${r//$'\n'/'%0A'}"
+          r="${r//$'\r'/'%0D'}"
+          echo "RELEASE_BODY=$r" >> $GITHUB_OUTPUT
+          
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_PAT }}
+          file: build/libs/*
+          asset_name: mything
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ steps.read_changelog.outputs.RELEASE_BODY }}
