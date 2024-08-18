@@ -33,34 +33,11 @@ jobs:
 
       - name: Build the mod
         run: ./gradlew --no-daemon build
-        
-      - name: Read CHANGELOG.md
-        id: read_changelog
+      
+      - name: Create & Upload release
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.GH_PAT }}
         run: |
-          r=$(cat CHANGELOG.md)
-          r="${r//'%'/'%25'}"
-          r="${r//$'\n'/'%0A'}"
-          r="${r//$'\r'/'%0D'}"
-          echo "RELEASE_BODY=$r" >> $GITHUB_OUTPUT
-          
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: ${{ steps.read_changelog.outputs.RELEASE_BODY }}
-          draft: false
-          prerelease: false
-          
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/libs/*.jar
+          gh release create --generate-notes ${{ github.ref }} ./build/libs/*
+        
