@@ -37,7 +37,7 @@ jobs:
       - name: Create & Upload release
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ github.GH_PAT }}
+          GH_TOKEN: ${{ github.GH_PAT }}
         run: |
           gh release create --generate-notes ${{ github.ref }} ./build/libs/*
         
