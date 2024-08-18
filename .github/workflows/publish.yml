@@ -45,7 +45,7 @@ jobs:
         run: ./gradlew --no-daemon build
         
       - name: Publish (CurseForge/Modrinth/GitHub)
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 1086419
           curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
