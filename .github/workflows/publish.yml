@@ -1,0 +1,66 @@
+name: Publish on GitHub, CurseForge & Modrinth
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+      release_name:
+        description: 'Release name'
+        required: true
+
+env:
+  VERSION: ${{ inputs.version }}
+  RELEASE_NAME: ${{ inputs.release_name }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_PAT }}
+  CURSEFORGE_TOKEN: ${{ secrets.CF_API_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build the mod
+        run: ./gradlew --no-daemon build
+        
+      - name: Publish (CurseForge/Modrinth/GitHub)
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          curseforge-id: 1086419
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+          
+          modrinth-id: 4cy6Ta9N
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          
+          github-tag: "v${{env.VERSION}}"
+          github-token: "${{env.GITHUB_TOKEN}}"
+
+          name: "${{env.RELEASE_NAME}}"
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+
+          loaders: fabric
+          game-versions: "1.20.1"
+          java: "17"
