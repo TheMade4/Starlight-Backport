@@ -24,7 +24,3 @@ jobs:
       - name: Build the mod
         run: ./gradlew --no-daemon build
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Starlight
-          path: build/libs
