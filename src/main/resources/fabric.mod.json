@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "id": "starlight",
   "version": "${version}",
-  "name": "Starlight",
+  "name": "Starlight (Backport)",
   "description": "Rewrites the light engine to fix lighting performance and lighting errors",
   "authors": [
-    "Spottedleaf"
+    "Spottedleaf",
+    "TheMade4"
   ],
   "contact": {
-    "issues": "https://github.com/PaperMC/Starlight/issues",
-    "sources": "https://github.com/PaperMC/Starlight",
+    "issues": "https://github.com/TheMade4/Starlight-Backport/issues",
+    "sources": "https://github.com/TheMade4/Starlight-Backport",
     "discord": "https://discord.gg/tuinity",
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/starlight"
   },
@@ -25,7 +26,7 @@
   ],
   "accessWidener" : "starlight.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.19",
-    "minecraft": "1.20.*"
+    "fabricloader": ">=0.15.11",
+    "minecraft": "1.20.1"
   }
 }
