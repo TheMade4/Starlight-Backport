@@ -33,17 +33,6 @@ jobs:
 
       - name: Build the mod
         run: ./gradlew --no-daemon build
-
-      - name: Switch to forge branch
-        shell: bash
-        run: |
-          git checkout -f forge
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build the mod
-        run: ./gradlew --no-daemon build
       
       - name: Create & Upload release
         shell: bash
