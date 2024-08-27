@@ -3,6 +3,8 @@ package ca.spottedleaf.starlight.mixin.common.blockstate;
 import ca.spottedleaf.starlight.common.blockstate.ExtendedAbstractBlockState;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,6 +32,9 @@ public abstract class BlockStateBaseMixin extends StateHolder<Block, BlockState>
     @Shadow
     protected BlockBehaviour.BlockStateBase.Cache cache;
 
+    @Shadow
+    public abstract Block getBlock();
+
     @Unique
     private int opacityIfCached;
 
@@ -50,6 +55,14 @@ public abstract class BlockStateBaseMixin extends StateHolder<Block, BlockState>
     public void initLightAccessState(final CallbackInfo ci) {
         this.isConditionallyFullOpaque = this.canOcclude & this.useShapeForLightOcclusion;
         this.opacityIfCached = this.cache == null || this.isConditionallyFullOpaque ? -1 : this.cache.lightBlock;
+        // Forge
+        try {
+            if (true) {
+                this.opacityIfCached = -1;
+            }
+        } catch (final Exception ex) {
+            this.opacityIfCached = -1;
+        }
     }
 
     @Override
