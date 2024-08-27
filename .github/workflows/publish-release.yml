@@ -37,7 +37,7 @@ jobs:
       - name: Switch to forge branch
         shell: bash
         run: |
-          git checkout forge
+          git checkout -f forge
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
